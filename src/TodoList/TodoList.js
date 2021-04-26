@@ -2,9 +2,9 @@ import React, { useState } from 'react';
 import classNames from 'classnames';
 
 // eslint-disable-next-line react/prop-types
-export const TodoList = ({ items, changeCheckbox }) => {
+export const TodoList = ({ items, changeCheckbox, handleDeleteTodo }) => {
   // eslint-disable-next-line no-unused-vars
-  const [value, setValue] = useState('');
+  const [v, sv] = useState('');
 
   return (
     <ul className="todo-list">
@@ -24,7 +24,11 @@ export const TodoList = ({ items, changeCheckbox }) => {
               }}
             />
             <label>{todo.title}</label>
-            <button type="button" className="destroy" />
+            <button
+              type="button"
+              className="destroy"
+              onClick={() => handleDeleteTodo(todo.id)}
+            />
           </div>
           <input type="text" className="edit" />
         </li>

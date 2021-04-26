@@ -11,12 +11,32 @@ const todosFromServer = [
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [title, setTitle] = useState('');
   const [checked, setChecked] = useState('true');
   const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     setTodos(todosFromServer);
   }, []);
+
+  const handleInputChange = (event) => {
+    const { value } = event.target;
+
+    setTitle(value);
+  };
+
+  const handleSubmit = (event) => {
+    if (title !== '') {
+      const newTodo = {
+        id: +new Date(),
+        title,
+        completed: false,
+      };
+
+      setTodos([...todos, newTodo]);
+      setTitle('');
+    }
+  };
 
   const changeCheckbox = (todoId, newCheck) => {
     const checkedTodo = todos.find(todo => todo.id === todoId);
@@ -34,10 +54,10 @@ function App() {
     }
   };
 
-  const switchFilter = (filterParameter) => {
+  const switchFilter = (filteredBy) => {
     let visibleTodos;
 
-    switch (filterParameter) {
+    switch (filteredBy) {
       case 'all':
         visibleTodos = todos;
         break;
@@ -57,11 +77,19 @@ function App() {
     return visibleTodos;
   };
 
-  const filteredTodos = switchFilter(activeFilter);
-
   const filterBy = (filteredBy) => {
     setActiveFilter(filteredBy);
     switchFilter(filteredBy);
+  };
+
+  const filteredTodos = switchFilter(activeFilter);
+
+  const handleDeleteTodo = (todoId) => {
+    setTodos(todos.filter(todo => todo.id !== todoId));
+  };
+
+  const handleDeleteAllTodos = () => {
+    setTodos(todos.filter(todo => todo.completed !== true));
   };
 
   // console.log(filteredTodos);
@@ -71,45 +99,57 @@ function App() {
       <header className="header">
         <h1>todos</h1>
 
-        <form>
+        <form onSubmit={handleSubmit}>
           <input
             type="text"
             className="new-todo"
             placeholder="What needs to be done?"
+            value={title}
+            onChange={handleInputChange}
           />
         </form>
       </header>
 
-      <section className="main">
-        <input
-          type="checkbox"
-          id="toggle-all"
-          className="toggle-all"
-          onChange={() => {
-            setChecked(!checked);
-            setCheckedAllTodos(checked);
-          }}
-        />
-        <label htmlFor="toggle-all">Mark all as complete</label>
+      {todos.length !== 0 && (
+        <>
+          <section className="main">
+            <input
+              type="checkbox"
+              id="toggle-all"
+              className="toggle-all"
+              onChange={() => {
+                setChecked(!checked);
+                setCheckedAllTodos(checked);
+              }}
+            />
+            <label htmlFor="toggle-all">Mark all as complete</label>
+            <TodoList
+              items={filteredTodos}
+              changeCheckbox={changeCheckbox}
+              handleDeleteTodo={handleDeleteTodo}
+            />
+          </section>
 
-        <TodoList
-          items={filteredTodos}
-          changeCheckbox={changeCheckbox}
-        />
-
-      </section>
-
-      <footer className="footer">
-        <span className="todo-count">
-          {`${todos.length} items left`}
-        </span>
-
-        <TodoFilter filterBy={filterBy} activeFilter={activeFilter} />
-
-        <button type="button" className="clear-completed">
-          Clear completed
-        </button>
-      </footer>
+          <footer className="footer">
+            <span className="todo-count">
+              {`${todos.length} items left`}
+            </span>
+            <TodoFilter
+              filterBy={filterBy}
+              activeFilter={activeFilter}
+            />
+            {todos.filter(todo => todo.completed === true).length >= 1 && (
+              <button
+                type="button"
+                className="clear-completed"
+                onClick={handleDeleteAllTodos}
+              >
+                Clear completed
+              </button>
+            )}
+          </footer>
+        </>
+      )}
     </section>
   );
 }

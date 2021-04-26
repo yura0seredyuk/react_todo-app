@@ -1,12 +1,10 @@
+// eslint-disable-next-line no-unused-vars
 import React, { useState } from 'react';
 import classNames from 'classnames';
 
 // eslint-disable-next-line react/prop-types
 export const TodoFilter = ({ filterBy, activeFilter }) => {
-  // eslint-disable-next-line no-unused-vars
-  const [value, setValue] = useState('');
-
-  const handleChangeVisibility = (filterParameter) => {
+  const handleFilterBy = (filterParameter) => {
     filterBy(filterParameter);
   };
 
@@ -16,7 +14,7 @@ export const TodoFilter = ({ filterBy, activeFilter }) => {
         <a
           href="#/"
           className={classNames(activeFilter === 'all' ? 'selected' : '')}
-          onClick={() => handleChangeVisibility('all')}
+          onClick={() => handleFilterBy('all')}
         >
           All
         </a>
@@ -26,7 +24,7 @@ export const TodoFilter = ({ filterBy, activeFilter }) => {
         <a
           href="#/active"
           className={classNames(activeFilter === 'active' ? 'selected' : '')}
-          onClick={() => handleChangeVisibility('active')}
+          onClick={() => handleFilterBy('active')}
         >
           Active
         </a>
@@ -36,7 +34,7 @@ export const TodoFilter = ({ filterBy, activeFilter }) => {
         <a
           href="#/completed"
           className={classNames(activeFilter === 'completed' ? 'selected' : '')}
-          onClick={() => handleChangeVisibility('completed')}
+          onClick={() => handleFilterBy('completed')}
         >
           Completed
         </a>
