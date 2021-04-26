@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { TodoList } from './TodoList';
+import { TodoFilter } from './TodoFilter';
 
 const todosFromServer = [
   { id: 1, title: '324234', completed: true },
@@ -11,6 +12,7 @@ const todosFromServer = [
 function App() {
   const [todos, setTodos] = useState([]);
   const [checked, setChecked] = useState('true');
+  const [activeFilter, setActiveFilter] = useState('all');
 
   useEffect(() => {
     setTodos(todosFromServer);
@@ -32,7 +34,37 @@ function App() {
     }
   };
 
-  // console.log(todos);
+  const switchFilter = (filterParameter) => {
+    let visibleTodos;
+
+    switch (filterParameter) {
+      case 'all':
+        visibleTodos = todos;
+        break;
+
+      case 'active':
+        visibleTodos = todos.filter(todo => todo.completed === false);
+        break;
+
+      case 'completed':
+        visibleTodos = todos.filter(todo => todo.completed === true);
+        break;
+
+      default:
+        visibleTodos = todos;
+    }
+
+    return visibleTodos;
+  };
+
+  const filteredTodos = switchFilter(activeFilter);
+
+  const filterBy = (filteredBy) => {
+    setActiveFilter(filteredBy);
+    switchFilter(filteredBy);
+  };
+
+  // console.log(filteredTodos);
 
   return (
     <section className="todoapp">
@@ -61,7 +93,7 @@ function App() {
         <label htmlFor="toggle-all">Mark all as complete</label>
 
         <TodoList
-          items={todos}
+          items={filteredTodos}
           changeCheckbox={changeCheckbox}
         />
 
@@ -72,19 +104,7 @@ function App() {
           {`${todos.length} items left`}
         </span>
 
-        <ul className="filters">
-          <li>
-            <a href="#/" className="selected">All</a>
-          </li>
-
-          <li>
-            <a href="#/active">Active</a>
-          </li>
-
-          <li>
-            <a href="#/completed">Completed</a>
-          </li>
-        </ul>
+        <TodoFilter filterBy={filterBy} activeFilter={activeFilter} />
 
         <button type="button" className="clear-completed">
           Clear completed

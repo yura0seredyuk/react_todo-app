@@ -1,33 +1,37 @@
-// import React, { useState } from 'react';
-// import classNames from 'classnames';
-//
-// export const TodoList = ({ items, changeCheckbox }) => {
-//
-//   return (
-//     <ul className="todo-list">
-//       {items.map(todo => (
-//         <li
-//           key={todo.id}
-//           className={classNames(todo.completed ? 'completed' : '')}
-//         >
-//           <div className="view">
-//             <input
-//               type="checkbox"
-//               className="toggle"
-//               checked={todo.completed}
-//               onChange={() => {
-//                 changeCheckbox(todo.id, !todo.completed);
-//               }}
-//             />
-//             <label>{todo.title}</label>
-//             <button type="button" className="destroy" />
-//           </div>
-//           <input type="text" className="edit" />
-//         </li>
-//       ))}
-//     </ul>
-//   );
-// };
+import React, { useState } from 'react';
+import classNames from 'classnames';
+
+// eslint-disable-next-line react/prop-types
+export const TodoList = ({ items, changeCheckbox }) => {
+  // eslint-disable-next-line no-unused-vars
+  const [value, setValue] = useState('');
+
+  return (
+    <ul className="todo-list">
+      {/* eslint-disable-next-line react/prop-types */}
+      {items.map(todo => (
+        <li
+          key={todo.id}
+          className={classNames(todo.completed ? 'completed' : '')}
+        >
+          <div className="view">
+            <input
+              type="checkbox"
+              className="toggle"
+              checked={todo.completed}
+              onChange={() => {
+                changeCheckbox(todo.id, !todo.completed);
+              }}
+            />
+            <label>{todo.title}</label>
+            <button type="button" className="destroy" />
+          </div>
+          <input type="text" className="edit" />
+        </li>
+      ))}
+    </ul>
+  );
+};
 
 // <li className="completed">
 //   <div className="view">
