@@ -5,19 +5,34 @@ const todosFromServer = [
   { id: 1, title: '324234', completed: true },
   { id: 2, title: 'sdfsdfsfd', completed: false },
   { id: 3, title: 'fsdfsdfsdfsdfsdsdf', completed: true },
-  { id: 4, title: '2', completed: true },
+  { id: 4, title: '2', completed: false },
 ];
 
 function App() {
   const [todos, setTodos] = useState([]);
+  const [checked, setChecked] = useState('true');
 
   useEffect(() => {
     setTodos(todosFromServer);
-  }, [todos]);
+  }, []);
 
-  const handleChangeCompleted = (id) => {
-    setTodos(!todos.find(todo => todo.id === id).completed);
+  const changeCheckbox = (todoId, newCheck) => {
+    const checkedTodo = todos.find(todo => todo.id === todoId);
+
+    checkedTodo.completed = newCheck;
+
+    setTodos(todos.map(todo => todo));
   };
+
+  const setCheckedAllTodos = (isChecked) => {
+    if (isChecked) {
+      setTodos(todos.map(todo => ({ ...todo, completed: true })));
+    } else {
+      setTodos(todos.map(todo => ({ ...todo, completed: false })));
+    }
+  };
+
+  // console.log(todos);
 
   return (
     <section className="todoapp">
@@ -34,10 +49,21 @@ function App() {
       </header>
 
       <section className="main">
-        <input type="checkbox" id="toggle-all" className="toggle-all" />
+        <input
+          type="checkbox"
+          id="toggle-all"
+          className="toggle-all"
+          onChange={() => {
+            setChecked(!checked);
+            setCheckedAllTodos(checked);
+          }}
+        />
         <label htmlFor="toggle-all">Mark all as complete</label>
 
-        <TodoList items={todos} completed={handleChangeCompleted} />
+        <TodoList
+          items={todos}
+          changeCheckbox={changeCheckbox}
+        />
 
       </section>
 
