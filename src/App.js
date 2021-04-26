@@ -1,6 +1,24 @@
-import React from 'react';
+import React, { useState, useEffect } from 'react';
+import { TodoList } from './TodoList';
+
+const todosFromServer = [
+  { id: 1, title: '324234', completed: true },
+  { id: 2, title: 'sdfsdfsfd', completed: false },
+  { id: 3, title: 'fsdfsdfsdfsdfsdsdf', completed: true },
+  { id: 4, title: '2', completed: true },
+];
 
 function App() {
+  const [todos, setTodos] = useState([]);
+
+  useEffect(() => {
+    setTodos(todosFromServer);
+  }, [todos]);
+
+  const handleChangeCompleted = (id) => {
+    setTodos(!todos.find(todo => todo.id === id).completed);
+  };
+
   return (
     <section className="todoapp">
       <header className="header">
@@ -19,48 +37,13 @@ function App() {
         <input type="checkbox" id="toggle-all" className="toggle-all" />
         <label htmlFor="toggle-all">Mark all as complete</label>
 
-        <ul className="todo-list">
-          <li>
-            <div className="view">
-              <input type="checkbox" className="toggle" />
-              <label>asdfghj</label>
-              <button type="button" className="destroy" />
-            </div>
-            <input type="text" className="edit" />
-          </li>
+        <TodoList items={todos} completed={handleChangeCompleted} />
 
-          <li className="completed">
-            <div className="view">
-              <input type="checkbox" className="toggle" />
-              <label>qwertyuio</label>
-              <button type="button" className="destroy" />
-            </div>
-            <input type="text" className="edit" />
-          </li>
-
-          <li className="editing">
-            <div className="view">
-              <input type="checkbox" className="toggle" />
-              <label>zxcvbnm</label>
-              <button type="button" className="destroy" />
-            </div>
-            <input type="text" className="edit" />
-          </li>
-
-          <li>
-            <div className="view">
-              <input type="checkbox" className="toggle" />
-              <label>1234567890</label>
-              <button type="button" className="destroy" />
-            </div>
-            <input type="text" className="edit" />
-          </li>
-        </ul>
       </section>
 
       <footer className="footer">
         <span className="todo-count">
-          3 items left
+          {`${todos.length} items left`}
         </span>
 
         <ul className="filters">
